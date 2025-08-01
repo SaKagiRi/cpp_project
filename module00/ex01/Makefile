@@ -1,4 +1,4 @@
-NAME			= megaphone
+NAME			= phonebook
 CC				= c++
 CPPFLAGS		= $(VERSIONFLAGS) $(WFLAGS)
 VERSIONFLAGS	= -std=c++98
@@ -7,7 +7,7 @@ WFLAGS			= -Wall -Wextra -Werror
 OBJDIR			= obj
 SRCDIR			= .
 
-FILE			= megaphone.cpp
+FILE			= Contact.cpp PhoneBook.cpp main.cpp
 OBJ				= $(addprefix $(OBJDIR)/, $(FILE:.cpp=.o))
 
 all: $(OBJDIR) $(NAME)
