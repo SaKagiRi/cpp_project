@@ -19,4 +19,10 @@ int	main(void)
 		club.setType("some other type of club");
 		jim.attack();
 	}
+
+	{
+		HumanB jim("Jim");
+		jim.attack();
+	}
+
 }
