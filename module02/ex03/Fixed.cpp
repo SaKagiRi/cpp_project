@@ -150,3 +150,9 @@ Fixed&	Fixed::max(Fixed& a, Fixed& b)
 		return (a);
 	return (b);
 }
+
+std::ostream&	operator<<(std::ostream& os, const Fixed& fix)
+{
+	os<< fix.toFloat();
+	return (os);
+}
