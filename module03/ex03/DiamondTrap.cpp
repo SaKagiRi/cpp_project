@@ -12,7 +12,7 @@ DiamondTrap::DiamondTrap(void): ClapTrap("unknow_clap_name"), _name("unknow")
 	std::cout << "DiamondTrap call default constructor." << std::endl;
 }
 
-DiamondTrap::DiamondTrap(std::string name): ClapTrap(name + "_clap_name"),_name(name)
+DiamondTrap::DiamondTrap(std::string name): ClapTrap(name + "_clap_name"), _name(name)
 {
 	_hitPoint = FragTrap::_hitPoint;
 	_energy = 50;
@@ -39,6 +39,7 @@ DiamondTrap&	DiamondTrap::operator=(const DiamondTrap& source)
 		_energy = source._energy;
 		_damage = source._damage;
 	}
+	std::cout << "DiamondTrap call coppy assignment oparetor." << std::endl;
 	return (*this);
 }
 
