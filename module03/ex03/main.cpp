@@ -43,4 +43,7 @@ int	main(void)
 	std::cout << "try use B attack" << std::endl;
 	b.attact(a.getName());
 	std::cout << std::endl;
+
+	delete e;
+	delete f;
 }
