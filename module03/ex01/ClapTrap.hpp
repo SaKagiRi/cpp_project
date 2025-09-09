@@ -20,7 +20,7 @@ class	ClapTrap {
 
 		std::string		getName(void) const;
 		void			printStatus(void) const;
-		virtual void	attact(const std::string& target);
+		virtual void	attack(const std::string& target);
 		void			takeDamage(unsigned int amount);
 		void			beRepaired(unsigned int amount);
 };

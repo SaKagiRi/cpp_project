@@ -43,9 +43,9 @@ DiamondTrap&	DiamondTrap::operator=(const DiamondTrap& source)
 	return (*this);
 }
 
-void	DiamondTrap::attact(const std::string& target)
+void	DiamondTrap::attack(const std::string& target)
 {
-	ScavTrap::attact(target);
+	ScavTrap::attack(target);
 }
 
 void	DiamondTrap::whoAmI(void)

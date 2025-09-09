@@ -7,9 +7,9 @@ int	main(void)
 
 
 	tob.beRepaired(9999);
-	bob.attact(tob.getName());
+	bob.attack(tob.getName());
 	tob.takeDamage(10);
-	tob.attact(bob.getName());
+	tob.attack(bob.getName());
 	bob.takeDamage(10);
-	bob.attact(tob.getName());
+	bob.attack(tob.getName());
 }

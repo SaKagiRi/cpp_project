@@ -18,15 +18,15 @@ int	main(void)
 	a.guardGate();
 	std::cout << std::endl;
 	std::cout << "try a attack b" << std::endl;
-	a.attact(b.getName());
+	a.attack(b.getName());
 	b.takeDamage(20);
-	a.attact(b.getName());
+	a.attack(b.getName());
 	b.takeDamage(20);
-	a.attact(b.getName());
+	a.attack(b.getName());
 	b.takeDamage(20);
-	a.attact(b.getName());
+	a.attack(b.getName());
 	b.takeDamage(20);
-	a.attact(b.getName());
+	a.attack(b.getName());
 	b.takeDamage(20);
 	std::cout << std::endl;
 	std::cout << "status:b is" << std::endl;
@@ -36,7 +36,7 @@ int	main(void)
 	a.printStatus();
 	std::cout << std::endl;
 	std::cout << "try use B attack" << std::endl;
-	b.attact(a.getName());
+	b.attack(a.getName());
 	std::cout << std::endl;
 
 	delete e;

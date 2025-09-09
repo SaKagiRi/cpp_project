@@ -44,16 +44,16 @@ ScavTrap&	ScavTrap::operator=(const ScavTrap& source)
 	return (*this);
 }
 
-void	ScavTrap::attact(const std::string& target)
+void	ScavTrap::attack(const std::string& target)
 {
 	if (_hitPoint <= 0)
 	{
-		std::cout << "ScavTrap " << _name << " can not attact, " << _name << " is death" << std::endl;
+		std::cout << "ScavTrap " << _name << " can not attack, " << _name << " is death" << std::endl;
 		return ;
 	}
 	if (_energy <= 0)
 	{
-		std::cout << "ScavTrap " << _name << " can not attact, " << _name << " not enough energy" << std::endl;
+		std::cout << "ScavTrap " << _name << " can not attack, " << _name << " not enough energy" << std::endl;
 		return ;
 	}
 	std::cout << "ScavTrap " << _name << " attacks " << target \
