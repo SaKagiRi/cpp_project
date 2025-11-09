@@ -62,7 +62,7 @@ int main(void) {
             << std::endl;
   std::cout << "constructor with paramiter must allocate arr with nothing in "
                "side and size: "
-            << a.size() << std::endl;
+            << b.size() << std::endl;
   std::cout << "print arr: " << std::endl;
   for (size_t i = 0; i < b.size(); i++)
     std::cout << "[" << b[i] << "]" << std::endl;
