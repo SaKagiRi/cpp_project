@@ -19,8 +19,6 @@
 # define RESET  "\033[0m"
 
 bool isAllDigit(std::string& s);
-size_t jacobsthal_sequence(size_t n);
-size_t jacobsthal_sequence2(size_t n);
 
 template< template<typename _Tp, typename _Alloc = std::allocator<_Tp> >
 class Container>
@@ -82,6 +80,11 @@ std::string PmergeMe<Container>::getTime(void)
 
 	if (!time_flags)
 		throw std::runtime_error("don't have record time.");
+	if (time.tv_usec < 0)
+	{
+		time.tv_sec -= 1;
+		time.tv_usec = 1000000 - time.tv_usec;
+	}
 	usec << time.tv_usec;
 	sec << time.tv_sec << ".";
 	for (size_t i = 0; i < 6 - usec.str().length(); i++)
@@ -152,12 +155,11 @@ template< template<typename, typename>class Container>
 void PmergeMe<Container>::printALlItem(void) const
 {
 	typename Container_type::const_iterator it = list.begin();
-	std::cout << "| ";
 	for (;it != list.end(); it++)
 	{
 	  std::cout << *it << " ";
 	}
-	std::cout << "|" << std::endl;
+	std::cout << std::endl;
 }
 
 /**
@@ -221,12 +223,6 @@ void reserve(Container& cont, size_t size)
 template< template<typename, typename>class Container>
 void PmergeMe<Container>::fordJohnsonSort(Container_type& source, Container_type& sortList)
 {
-	// std::cout << YELLOW "item : " RESET;
-	// for (typename Container_type::iterator it = source.begin(); it != source.end(); it++)
-	// 	std::cout << *it << " ";
-	// std::cout << std::endl;
-	// (void)sortList;
-
 	Chain chain;
 	bool have_straggler = (source.size() % 2 != 0);
 	int straggler = 0;
@@ -237,92 +233,45 @@ void PmergeMe<Container>::fordJohnsonSort(Container_type& source, Container_type
 		return ;
 	}
 	reserve(chain, source.size() / 2);
+
+	//--step1-- pair min max
 	if (have_straggler)
 		straggler = source.back();
 	for (typename Container_type::iterator it = source.begin(); std::distance(it, source.end()) > 1; std::advance(it, 2))
 	{
 		typename Container_type::iterator second = it;
 		std::advance(second, 1);
-		// std::cout << "first of pair : " << *it << std::endl;
-		// std::cout << "second of pair : " << *second << std::endl;
-		// std::cout << std::endl;
 		if (*it > *second)
 			chain.push_back(Pair(*it, *second));
 		else
 			chain.push_back(Pair(*second, *it));
 	}
 	
-	// (void)straggler;
-	// if (have_straggler)
-	// 	std::cout << "straggler : " << straggler << std::endl;
-	//
-	// std::cout << RED "===============" RESET << std::endl;
-	// for (typename Chain::iterator it = chain.begin(); it != chain.end(); it++)
-	// 	std::cout << "Pair: (" << it->max << ", " << it->min << ")" << std::endl;
-	// std::cout << RED "===============" RESET << std::endl;
-	//
-	// std::cout << "--------------------->end" << std::endl;
-	
+	//--step2-- recursive half
 	Container_type main;
 	reserve(main, source.size() / 2);
 	for (typename Chain::iterator it = chain.begin(); it != chain.end(); it++)
 		main.push_back(it->max);
+
 	fordJohnsonSort(main, sortList);
 
-	// std::cout << "reverse--------------------->end" << std::endl;
-	// std::cout << "sortList size : " << sortList.size() << std::endl;
-	// std::cout << "sortList item : ";
-	// for (typename Container_type::iterator it = sortList.begin(); it != sortList.end(); it++)
-	// 	std::cout << *it << " ";
-	// std::cout << std::endl;
-	// std::cout << std::endl;
-	//
-	// std::cout << "pending size : " << chain.size() << std::endl;
-	// std::cout << "pending item : ";
-	// for (typename Chain::iterator it = chain.begin(); it != chain.end(); it++)
-	// 	std::cout << it->max << " ";
-	// std::cout << std::endl;
-	// std::cout << "               ";
-	// for (typename Chain::iterator it = chain.begin(); it != chain.end(); it++)
-	// 	std::cout << it->min << " ";
-	// std::cout << std::endl;
-	// std::cout << std::endl;
-	//
-	
-
-	(void)source;
-	(void)sortList;
-	// for (size_t i = 0; i < size(); i++)
-	// 	jacobsthal_sequence2(i);
-
-	//
-	//jacopsthal
-	
-	size_t prev = 0;
-	size_t curr = 1;
-	size_t proc = 0;
-	// bool start = false;
-	
-	// std::cout << "pending :";
-	// for (typename Chain::iterator it = chain.begin(); it != chain.end(); it++)
-	// 	std::cout << it->min << " ";
-	// std::cout << std::endl;
-
+	//--step3-- insert pending and straggler use jacobsthal sequence
 	if (have_straggler)
 	{
 		typename Container_type::iterator pos = std::lower_bound(sortList.begin(), sortList.end(), straggler);
 		sortList.insert(pos, straggler);
 	}
-
 	// 0 2 1 4 3 9 8 7 6 5
 	// 0 -> 2  = 2 - 0 = +2;
 	// 2 -> 1 = 1 - 2 = -1;
 	// curr -> next = next - curr = distance;
 	// and loopback;
+	size_t prev = 0;
+	size_t curr = 1;
+	size_t proc = 0;
 	size_t temp_limit = 0;
 	typename Chain::iterator it = chain.begin();
 	while (proc < chain.size())
-	// while (proc < 19)
 	{
 		size_t limit = curr;
 		if (limit > chain.size())
@@ -334,77 +283,15 @@ void PmergeMe<Container>::fordJohnsonSort(Container_type& source, Container_type
 			typename Container_type::iterator max_it = std::lower_bound(sortList.begin(), sortList.end(), it->max);
 			typename Container_type::iterator pos = std::lower_bound(sortList.begin(), max_it, it->min);
 			sortList.insert(pos, it->min);
-			// std::cout << "limit :" << limit << ", proc :" << proc <<  ", " << "insert :" << it->min << std::endl;
 			std::advance(it, limit - temp_limit);
 			temp_limit = limit;
 			limit--;
-			// std::cout << limit-- - 1 <<std::endl;
 		}
-		// if (next > chain.size())
-		// 	next = chain.size();
-		// std::advance(iter, limit - 1);
-		// typename Chain::iterator it = iter;
-		// std::cout << "proc :" << proc  << ", limit :" << limit << ", dis :" << next - limit << std::endl;
-		// for (size_t i = 0; i < next - limit; i++)
-		// {
-			// typename Container_type::iterator max_it = std::lower_bound(sortList.begin(), sortList.end(), it->max);
-			// typename Container_type::iterator pos = std::lower_bound(sortList.begin(), max_it, it->min);
-			// sortList.insert(pos, it->min);
-			// std::cout << "limit :" << limit << ", proc :" << proc <<  ", " << "insert :" << it->min << std::endl;
-			// std::advance(it, -1);
-			// limit--;
-		// }
-			// std::cout << limit << std::endl;
-		// std::cout << "L :" << limit  << ", P :" << proc << std::endl;
-		// std::advance(it, limit);
-		// while (limit > proc)
-		// {
-		// 	std::cout << limit-- - 1 << std::endl;
-		// }
-		// size_t diff = limit - proc;
-		// std::cout << "---------" << proc << ", " << limit << ", " << diff << std::endl;
-		// typename Chain::iterator it = chain.begin();
-		// for (size_t i = 0; i < diff; i++)
-		// {
-		// 	// std::cout << "---------" << proc + limit - i - 1 << std::endl;
-		// 	// std::cout << limit - i << std::endl;
-		// }
-		// start = true;
 		proc = curr;
 		size_t next = curr + 2 * prev;
 		prev = curr;
 		curr = next;
 	}
-	// size_t prev2 = 0;
-	// size_t cur = 0;
-	//
-	// while (cur < 19)
-	// {
-	// 	size_t i = prev1;
-	// 	while (i > cur)
-	// 	{
-	// 		std::cout << i << std::endl;
-	// 		i--;
-	// 	}
-	// 	cur = prev1;
- //        size_t curr = prev1 + (2 * prev2);
- //        prev2 = prev1;
- //        prev1 = curr;
-	// }
-
-		// std::cout << "J(" << i << ") : " << jacobsthal_sequence(i) << std::endl;
-	
-	// for (typename Chain::iterator it = chain.begin(); it != chain.end(); it++)
-	// {
-	// 	typename Container_type::iterator max_it = std::lower_bound(sortList.begin(), sortList.end(), it->max);
-	// 	typename Container_type::iterator pos = std::lower_bound(sortList.begin(), max_it, it->min);
-	// 	sortList.insert(pos, it->min);
-	// }
-
-	// std::cout << "sort---: ";
-	// for (typename Container_type::iterator it = sortList.begin(); it != sortList.end(); it++)
-	// 	std::cout << *it << " ";
-	// std::cout << std::endl;
 }
 
 template< template<typename, typename>class Container>
